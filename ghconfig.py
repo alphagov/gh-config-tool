@@ -9,7 +9,6 @@ API_BASE_URL = 'https://api.github.com'
 
 
 def search_repositories(organisation, name):
-    # import ipdb; ipdb.set_trace()
     headers = {'Authorization': 'Token {0}'.format(GH_TOKEN)}
     api_url = '{0}/orgs/{1}/repos'.format(API_BASE_URL, organisation)
     response = requests.get(api_url, headers=headers)
