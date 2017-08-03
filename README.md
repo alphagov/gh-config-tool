@@ -8,7 +8,7 @@ Scan organisation repositories and check for an expected configuration
 
 # Project Configuration
 
-To use this tool you need to generate a personal GitHub token and make sure you have this environment variable set:
+To use this tool you need to generate a personal GitHub token ( <https://github.com/settings/tokens> ) and make sure you have this environment variable set:
 
 ```
 export GH_TOKEN=<yourgithubtoken>
