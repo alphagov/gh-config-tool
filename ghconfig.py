@@ -36,6 +36,26 @@ def search_repositories(organisation, name):
     return repositories_found
 
 
+def set_branch_protection(organisation, repository, branch):
+    headers = {
+        'Authorization': 'Token {0}'.format(GH_TOKEN),
+        'Accept': 'application/vnd.github.loki-preview+json'
+    }
+
+    api_url = '{0}/repos/{1}/{2}/branches/{3}/protection'.format(
+        API_BASE_URL, organisation, repository, branch)
+
+    payload = {
+        "required_status_checks": None,
+        "required_pull_request_reviews": None,
+        "enforce_admins": True,
+        "restrictions": None
+    }
+
+    response = requests.put(api_url, headers=headers, json=payload)
+    return response.status_code, response.json()
+
+
 @click.command()
 def check_config():
     print('Checking GitHub configuration...')

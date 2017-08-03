@@ -1,5 +1,5 @@
 import responses
-from ghconfig import search_repositories
+from ghconfig import search_repositories, set_branch_protection
 import json
 
 
@@ -41,3 +41,33 @@ def test_search_repositories():
 
     repositories = search_repositories('alphagov', 'paas-')
     assert len(repositories) == 4
+
+
+@responses.activate
+def test_set_branch_protection():
+    body = {
+        'url': (
+            'https://api.github.com/'
+            'repos/andreagrandi/andrea-test/branches/master/protection'),
+        'enforce_admins': {
+            'url': (
+                'https://api.github.com/repos/andreagrandi/andrea-test/'
+                'branches/master/protection/enforce_admins')},
+        'enabled': True
+    }
+
+    responses.add(
+        responses.PUT, (
+            'https://api.github.com/'
+            'repos/andreagrandi/andrea-test/branches/master/protection'),
+        body=json.dumps(body), status=200,
+        content_type='application/json',
+    )
+
+    response = set_branch_protection(
+        'andreagrandi',
+        'andrea-test',
+        'master'
+    )
+
+    assert response[0] == 200
