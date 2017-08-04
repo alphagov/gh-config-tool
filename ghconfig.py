@@ -73,7 +73,7 @@ def remove_branch_protection(organisation, repository, branch):
     '--organisation', help='Name of the Organisation or GitHub user.',
     default='alphagov')
 @click.option(
-    '--filter', help='Specify a filter for repository names (example: paas-'
+    '--filter', help='Specify a filter for repository names (example: paas-',
     default='')
 @click.command()
 def check_config(organisation, filter):
