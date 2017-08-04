@@ -1,5 +1,6 @@
 import responses
-from ghconfig import search_repositories, set_branch_protection
+from ghconfig import (
+    search_repositories, set_branch_protection, remove_branch_protection)
 import json
 
 
@@ -71,3 +72,22 @@ def test_set_branch_protection():
     )
 
     assert response[0] == 200
+
+
+@responses.activate
+def test_remove_branch_protection():
+    responses.add(
+        responses.DELETE, (
+            'https://api.github.com/'
+            'repos/andreagrandi/andrea-test/branches/master/protection'),
+        status=204,
+        content_type='application/json',
+    )
+
+    response = remove_branch_protection(
+        'andreagrandi',
+        'andrea-test',
+        'master'
+    )
+
+    assert response == 204

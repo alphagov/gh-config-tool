@@ -56,6 +56,19 @@ def set_branch_protection(organisation, repository, branch):
     return response.status_code, response.json()
 
 
+def remove_branch_protection(organisation, repository, branch):
+    headers = {
+        'Authorization': 'Token {0}'.format(GH_TOKEN),
+        'Accept': 'application/vnd.github.loki-preview+json'
+    }
+
+    api_url = '{0}/repos/{1}/{2}/branches/{3}/protection'.format(
+        API_BASE_URL, organisation, repository, branch)
+
+    response = requests.delete(api_url, headers=headers)
+    return response.status_code
+
+
 @click.command()
 def check_config():
     print('Checking GitHub configuration...')
