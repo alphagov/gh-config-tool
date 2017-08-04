@@ -96,6 +96,9 @@ def check_config(organisation, filter, configuration):
     for repository in repositories:
         if config.get('protected_branches'):
             for branch in config['protected_branches']:
+                print(
+                    'Protecting branch {0} on {1}/{2}'.format(
+                        branch, organisation, repository['name']))
                 set_branch_protection(
                     organisation,
                     repository['name'],
