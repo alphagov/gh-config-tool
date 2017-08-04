@@ -69,11 +69,19 @@ def remove_branch_protection(organisation, repository, branch):
     return response.status_code
 
 
+@click.option(
+    '--organisation', help='Name of the Organisation or GitHub user.',
+    default='alphagov')
+@click.option(
+    '--filter', help='Specify a filter for repository names (example: paas-'
+    default='')
 @click.command()
-def check_config():
+def check_config(organisation, filter):
     print('Checking GitHub configuration...')
-    repos = search_repositories('alphagov', 'paas-')
-    print('Found {0} repositories'.format(len(repos)))
+
+    # Filter repositories to work on using the specified organisation and
+    # repository names filter
+    repos = search_repositories(organisation, filter)
 
 
 if __name__ == '__main__':
