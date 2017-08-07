@@ -69,7 +69,7 @@ def remove_branch_protection(organisation, repository, branch):
 
 def load_configuration(configuration_file):
     with open(configuration_file) as config_file:
-        configuration = yaml.load(config_file)
+        configuration = yaml.load_safe(config_file)
         return configuration
 
 
