@@ -1,0 +1,3 @@
+protected_branches:
+  - master
+enforce_admins: true

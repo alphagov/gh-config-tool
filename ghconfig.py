@@ -1,6 +1,7 @@
 import click
 import requests
 import os
+import yaml
 
 
 # Get GitHub token from environment variable
@@ -24,9 +25,6 @@ def search_repositories(organisation, name):
                 response.links['next']['url'], headers=headers)
             repositories += response.json()
 
-    print('Total {0} repositories: {1}'.format(
-        organisation, len(repositories)))
-
     repositories_found = []
 
     for repo in repositories:
@@ -36,7 +34,7 @@ def search_repositories(organisation, name):
     return repositories_found
 
 
-def set_branch_protection(organisation, repository, branch):
+def set_branch_protection(organisation, repository, branch, enforce_admins):
     headers = {
         'Authorization': 'Token {0}'.format(GH_TOKEN),
         'Accept': 'application/vnd.github.loki-preview+json'
@@ -48,7 +46,7 @@ def set_branch_protection(organisation, repository, branch):
     payload = {
         "required_status_checks": None,
         "required_pull_request_reviews": None,
-        "enforce_admins": True,
+        "enforce_admins": enforce_admins,
         "restrictions": None
     }
 
@@ -69,20 +67,43 @@ def remove_branch_protection(organisation, repository, branch):
     return response.status_code
 
 
+def load_configuration(configuration_file):
+    with open(configuration_file) as config_file:
+        configuration = yaml.load_safe(config_file)
+        return configuration
+
+
 @click.option(
     '--organisation', help='Name of the Organisation or GitHub user.',
     default='alphagov')
 @click.option(
     '--filter', help='Specify a filter for repository names (example: paas-',
     default='')
+@click.option(
+    '--configuration', help='Configuration file', default='ghconfig.yml')
 @click.command()
-def check_config(organisation, filter):
+def check_config(organisation, filter, configuration):
     print('Checking GitHub configuration...')
 
     # Filter repositories to work on using the specified organisation and
     # repository names filter
-    repos = search_repositories(organisation, filter)
+    repositories = search_repositories(organisation, filter)
 
+    # Load configuration from file
+    config = load_configuration(configuration)
+
+    # Apply the configuration to found braches
+    for repository in repositories:
+        if config.get('protected_branches'):
+            for branch in config['protected_branches']:
+                print(
+                    'Protecting branch {0} on {1}/{2}'.format(
+                        branch, organisation, repository['name']))
+                set_branch_protection(
+                    organisation,
+                    repository['name'],
+                    branch,
+                    config.get('enforce_admins'))
 
 if __name__ == '__main__':
     check_config()

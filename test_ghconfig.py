@@ -68,7 +68,8 @@ def test_set_branch_protection():
     response = set_branch_protection(
         'andreagrandi',
         'andrea-test',
-        'master'
+        'master',
+        True
     )
 
     assert response[0] == 200
