@@ -80,7 +80,7 @@ def remove_collaborator_from_repository(organisation, repository, username):
     return response.status_code
 
 
-def remove_collaborator_from_organisation(organisation, username):
+def remove_member_from_organisation(organisation, username):
     headers = {
         'Authorization': 'Token {0}'.format(GH_TOKEN),
         'Accept': 'application/vnd.github.loki-preview+json'
