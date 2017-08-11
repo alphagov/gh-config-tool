@@ -1,7 +1,7 @@
 import responses
 from ghconfig import (
     search_repositories, set_branch_protection, remove_branch_protection,
-    remove_collaborator)
+    remove_collaborator_from_repository, remove_member_from_organisation)
 import json
 
 
@@ -96,7 +96,7 @@ def test_remove_branch_protection():
 
 
 @responses.activate
-def test_remove_collaborator():
+def test_remove_collaborator_from_repository():
     responses.add(
         responses.DELETE, (
             'https://api.github.com/'
@@ -105,8 +105,26 @@ def test_remove_collaborator():
         content_type='application/json',
     )
 
-    response = remove_collaborator(
+    response = remove_collaborator_from_repository(
         'andreagrandi',
+        'andrea-test',
+        'user1'
+    )
+
+    assert response == 204
+
+
+@responses.activate
+def test_remove_member_from_organisation():
+    responses.add(
+        responses.DELETE, (
+            'https://api.github.com/'
+            'orgs/andrea-test/members/user1'),
+        status=204,
+        content_type='application/json',
+    )
+
+    response = remove_member_from_organisation(
         'andrea-test',
         'user1'
     )

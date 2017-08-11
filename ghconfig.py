@@ -67,7 +67,7 @@ def remove_branch_protection(organisation, repository, branch):
     return response.status_code
 
 
-def remove_collaborator(organisation, repository, username):
+def remove_collaborator_from_repository(organisation, repository, username):
     headers = {
         'Authorization': 'Token {0}'.format(GH_TOKEN),
         'Accept': 'application/vnd.github.loki-preview+json'
@@ -75,6 +75,19 @@ def remove_collaborator(organisation, repository, username):
 
     api_url = '{0}/repos/{1}/{2}/collaborators/{3}'.format(
         API_BASE_URL, organisation, repository, username)
+
+    response = requests.delete(api_url, headers=headers)
+    return response.status_code
+
+
+def remove_member_from_organisation(organisation, username):
+    headers = {
+        'Authorization': 'Token {0}'.format(GH_TOKEN),
+        'Accept': 'application/vnd.github.loki-preview+json'
+    }
+
+    api_url = '{0}/orgs/{1}/members/{2}'.format(
+        API_BASE_URL, organisation, username)
 
     response = requests.delete(api_url, headers=headers)
     return response.status_code
